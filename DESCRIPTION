@@ -1,0 +1,28 @@
+Package: BINDER
+Type: Package
+Title: BayesIan gene regulatory Networks inferreD via gene Expression and compaRative genomics
+Version: 1.0
+Date: 2019-05-02
+Authors@R: as.person(c(
+    "Patrick Staunton <patrick.staunton@ucdconnect.ie> [aut, cre]", 
+    "Isobel Claire Gormley <claire.gormley@ucd.ie> [aut]"
+  ))
+Description: BINDER infers gene regulatory networks by constructing two strata: a primary stratum and an auxiliary stratum. The primary stratum is composed of expression data from the primary organism of interest and is supplemented by auxiliary data in the form of motif predictions and known orthologous regulator-target interactions from the proxy organism. BINDER’s parameter of interest is the probability of an interaction between a regulator-target pair and its associated posterior distribution; as such BINDER accounts for the uncertainty inherent in the computational inference of gene regulatory networks.
+License: GPL-3
+Biarch: true
+Depends: 
+    R (>= 3.4.0)
+Imports: 
+    methods,
+    Rcpp (>= 0.12.0),
+    rstan (>= 2.18.1),
+    rstantools (>= 1.5.1.9000),
+    plyr
+LinkingTo: 
+    BH (>= 1.66.0),
+    Rcpp (>= 0.12.0),
+    RcppEigen (>= 0.3.3.3.0),
+    rstan (>= 2.18.1),
+    StanHeaders (>= 2.18.0)
+Encoding: UTF-8
+RoxygenNote: 6.1.0
