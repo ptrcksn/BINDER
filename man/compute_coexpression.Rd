@@ -4,7 +4,7 @@
 \alias{compute_coexpression}
 \title{Derive symmetric coexpression matrix from expression matrix with genes represented on rows and experimental conditions represented on columns.}
 \usage{
-compute_coexpression(expression, target_candidates)
+compute_coexpression(expression)
 }
 \arguments{
 \item{expression}{Numerical expression matrix with genes represented on rows and experimental conditions represented on columns.}

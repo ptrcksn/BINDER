@@ -4,7 +4,7 @@
 \alias{find_coexpression_module}
 \title{Generate coexpression module for target candidate.}
 \usage{
-find_coexpression_module(target_candidate, coexpression, operon,
+find_coexpression_module(target_candidate, coexpression, o,
   threshold = "auto")
 }
 \arguments{
@@ -12,7 +12,7 @@ find_coexpression_module(target_candidate, coexpression, operon,
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{operon}{Character vector comprising genes of operon to which `target_candidate` belongs.}
+\item{o}{Character vector comprising names of genes which should not be included in the computation of `CM` and `CP` for `target_candidate`.}
 
 \item{threshold}{Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
 }

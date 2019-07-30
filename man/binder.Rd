@@ -4,7 +4,7 @@
 \alias{binder}
 \title{BINDER wrapper function.}
 \usage{
-binder(proxy_regulon, expression, operons, delta_CM = "auto",
+binder(proxy_regulon, expression, O = list(), delta_CM = "auto",
   delta_CP = "auto", is_coexpression = FALSE, model = "BINDER",
   mu_zeta = 0, sigma_zeta = 3, mu_tau = c(0, 0), sigma_tau = c(3,
   3), mu_phi = 0, sigma_phi = 3, mu_psi = c(0, 0), sigma_psi = c(3,
@@ -26,7 +26,7 @@ binder(proxy_regulon, expression, operons, delta_CM = "auto",
 
 \item{expression}{Numerical expression matrix; can be expression matrix with genes represented on rows and experimental conditions represented on columns or symmetric gene-gene coexpression matrix.}
 
-\item{operons}{Data frame in DOOR format comprising operon annotations for all target candidates in `ortholog_ME_PE_structure`.}
+\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CM` and `CP` for the corresponding target candidate name; by default only autocoexpression is excluded.}
 
 \item{delta_CM}{Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
 

@@ -4,7 +4,7 @@
 \alias{build_proxy_structure}
 \title{Build augmented structure comprising CM and CP values from coexpression, ME and PE values.}
 \usage{
-build_proxy_structure(ortholog_ME_PE_structure, coexpression, operons,
+build_proxy_structure(ortholog_ME_PE_structure, coexpression, O,
   delta_CM = "auto", delta_CP = "auto")
 }
 \arguments{
@@ -12,7 +12,7 @@ build_proxy_structure(ortholog_ME_PE_structure, coexpression, operons,
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{operons}{Data frame in DOOR format comprising operon annotations for all target candidates in `ortholog_ME_PE_structure`.}
+\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CM` and `CP` for the corresponding target candidate name; by default only autocoexpression is excluded.}
 
 \item{delta_CM}{Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
 

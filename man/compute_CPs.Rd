@@ -4,8 +4,8 @@
 \alias{compute_CPs}
 \title{Compute CP values for all target candidates.}
 \usage{
-compute_CPs(target_candidates, PE_module, ortholog_module, coexpression,
-  operons, threshold = "auto")
+compute_CPs(target_candidates, PE_module, ortholog_module, coexpression, O,
+  threshold = "auto")
 }
 \arguments{
 \item{target_candidates}{Character vector containing all target candidates for regulator.}
@@ -14,7 +14,7 @@ compute_CPs(target_candidates, PE_module, ortholog_module, coexpression,
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{operons}{Data frame in DOOR format comprising operon annotations for all genes in `target_candidates`.}
+\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CP` for the corresponding target candidate name; by default only autocoexpression is excluded.}
 
 \item{threshold}{Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
 }

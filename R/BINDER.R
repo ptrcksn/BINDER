@@ -243,7 +243,7 @@ run_deterministic_binder <- function(prepared_data, mu_zeta=0, sigma_zeta=3, mu_
 #' @export
 #' @param proxy_regulon Data frame comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise) and `PE` (1 if orthologous interaction, 0 otherwise).
 #' @param expression Numerical expression matrix; can be expression matrix with genes represented on rows and experimental conditions represented on columns or symmetric gene-gene coexpression matrix.
-#' @param operons Data frame in DOOR format comprising operon annotations for all target candidates in `ortholog_ME_PE_structure`.
+#' @param O Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CM` and `CP` for the corresponding target candidate name; by default only autocoexpression is excluded.
 #' @param delta_CM Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @param delta_CP Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @param is_coexpression logical; if TRUE, expression matrix is treated as symmetric coexpression matrix.
@@ -286,16 +286,16 @@ run_deterministic_binder <- function(prepared_data, mu_zeta=0, sigma_zeta=3, mu_
 #'     \item model_object - object of class `stanfit` returned by `rstan::sampling`.
 #'   }
 #'
-binder <- function(proxy_regulon, expression, operons, delta_CM="auto", delta_CP="auto", is_coexpression=FALSE, model="BINDER", mu_zeta=0, sigma_zeta=3, mu_tau=c(0,0), sigma_tau=c(3,3), mu_phi=0, sigma_phi=3, mu_psi=c(0,0), sigma_psi=c(3,3), model_summary=FALSE, model_summary_parameters, model_name="anon_model", fit=NA, chains=4, iter=2000, warmup=floor(iter/2), thin=1, init="random", seed=sample.int(.Machine$integer.max, 1), algorithm=c("NUTS", "HMC", "Fixed_param"), control=NULL, sample_file=NULL, diagnostic_file=NULL, save_dso=TRUE, verbose=FALSE, include=TRUE, cores=getOption("mc.cores", 1L), open_progress=interactive() && !isatty(stdout()) && !identical(Sys.getenv("RSTUDIO"), "1"), chain_id, init_r, test_grad=FALSE, append_samples, refresh=max(iter/10, 1), enable_random_init, save_warmup=TRUE, boost_lib=NULL, eigen_lib=NULL){
+binder <- function(proxy_regulon, expression, O=list(), delta_CM="auto", delta_CP="auto", is_coexpression=FALSE, model="BINDER", mu_zeta=0, sigma_zeta=3, mu_tau=c(0,0), sigma_tau=c(3,3), mu_phi=0, sigma_phi=3, mu_psi=c(0,0), sigma_psi=c(3,3), model_summary=FALSE, model_summary_parameters, model_name="anon_model", fit=NA, chains=4, iter=2000, warmup=floor(iter/2), thin=1, init="random", seed=sample.int(.Machine$integer.max, 1), algorithm=c("NUTS", "HMC", "Fixed_param"), control=NULL, sample_file=NULL, diagnostic_file=NULL, save_dso=TRUE, verbose=FALSE, include=TRUE, cores=getOption("mc.cores", 1L), open_progress=interactive() && !isatty(stdout()) && !identical(Sys.getenv("RSTUDIO"), "1"), chain_id, init_r, test_grad=FALSE, append_samples, refresh=max(iter/10, 1), enable_random_init, save_warmup=TRUE, boost_lib=NULL, eigen_lib=NULL){
   if(is_coexpression == TRUE){
     coexpression <- expression
   }else{
-    coexpression <- compute_coexpression(expression, proxy_regulon$target_candidate)
+    coexpression <- compute_coexpression(expression)
   }
   proxy_regulon <- proxy_regulon[proxy_regulon$target_candidate %in% colnames(coexpression), ]
   target_candidates <- proxy_regulon$target_candidate
   
-  proxy_structure <- build_proxy_structure(proxy_regulon, coexpression, operons, delta_CM, delta_CP)
+  proxy_structure <- build_proxy_structure(proxy_regulon, coexpression, O, delta_CM, delta_CP)
   prepared_data <- prepare_data(proxy_structure)
   if(model == "BINDER"){
     results <- run_binder(prepared_data, mu_zeta=mu_zeta, sigma_zeta=sigma_zeta, mu_tau=mu_tau, sigma_tau=sigma_tau, mu_phi=mu_phi, sigma_phi=sigma_phi, mu_psi=mu_psi, sigma_psi=sigma_psi, model_summary=model_summary, model_summary_parameters=model_summary_parameters, model_name=model_name, fit=fit, chains=chains, iter=iter, warmup=warmup, thin=thin, init=init, seed=seed, algorithm=algorithm, control=control, sample_file=sample_file, diagnostic_file=diagnostic_file, save_dso=save_dso, verbose=verbose, include=include, cores=cores, open_progress=open_progress, chain_id=chain_id, init_r=init_r, test_grad=test_grad, append_samples=append_samples, refresh=refresh, enable_random_init=enable_random_init, save_warmup=save_warmup, boost_lib=boost_lib, eigen_lib=eigen_lib)

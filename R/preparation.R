@@ -5,12 +5,12 @@
 #' @export
 #' @param ortholog_ME_PE_structure Data frame comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise) and `PE` (1 if orthologous interaction, 0 otherwise).
 #' @param coexpression Numerical symmetric matrix providing gene coexpression values.
-#' @param operons Data frame in DOOR format comprising operon annotations for all target candidates in `ortholog_ME_PE_structure`.
+#' @param O Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CM` and `CP` for the corresponding target candidate name; by default only autocoexpression is excluded.
 #' @param delta_CM Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @param delta_CP Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @return Data frame implementing augmented structure comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise), `PE` (1 if orthologous interaction, 0 otherwise), `CM` and `CP`.
 #'
-build_proxy_structure <- function(ortholog_ME_PE_structure, coexpression, operons, delta_CM="auto", delta_CP="auto"){
+build_proxy_structure <- function(ortholog_ME_PE_structure, coexpression, O, delta_CM="auto", delta_CP="auto"){
   regulator <- unique(ortholog_ME_PE_structure$regulator)
   target_candidates <- ortholog_ME_PE_structure$target_candidate
   
@@ -21,10 +21,10 @@ build_proxy_structure <- function(ortholog_ME_PE_structure, coexpression, operon
   ortholog_module <- ortholog_ME_PE_structure$target_candidate[ortholog_ME_PE_structure$ortholog_module_status == 1]
   
   ME_module <- ortholog_ME_PE_structure$target_candidate[ortholog_ME_PE_structure$ME == 1]
-  CM_structure <- compute_CMs(target_candidates, ME_module, coexpression, operons, delta_CM)
+  CM_structure <- compute_CMs(target_candidates, ME_module, coexpression, O, delta_CM)
   
   PE_module <- ortholog_ME_PE_structure$target_candidate[ortholog_ME_PE_structure$PE == 1]
-  CP_structure <- compute_CPs(target_candidates, PE_module, ortholog_module, coexpression, operons, delta_CP)
+  CP_structure <- compute_CPs(target_candidates, PE_module, ortholog_module, coexpression, O, delta_CP)
   
   proxy_structure <- plyr::join_all(list(ortholog_structure, ME_structure, PE_structure, CM_structure, CP_structure), by="target_candidate", type="full")
   proxy_structure$regulator <- regulator
