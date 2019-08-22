@@ -1,13 +1,13 @@
 Package: BINDER
 Type: Package
-Title: BayesIan gene regulatory Networks inferreD via gene Expression and compaRative genomics
+Title: BayesIan gene regulatory Networks inferreD via gene coExpression and compaRative genomics
 Version: 1.0
 Date: 2019-05-02
 Authors@R: as.person(c(
     "Patrick Staunton <patrick.staunton@ucdconnect.ie> [aut, cre]", 
     "Isobel Claire Gormley <claire.gormley@ucd.ie> [aut]"
   ))
-Description: BINDER infers gene regulatory networks by constructing two strata: a primary stratum and an auxiliary stratum. The primary stratum is composed of expression data from the primary organism of interest and is supplemented by auxiliary data in the form of motif predictions and known orthologous regulator-target interactions from the proxy organism. BINDER’s parameter of interest is the probability of an interaction between a regulator-target pair and its associated posterior distribution; as such BINDER accounts for the uncertainty inherent in the computational inference of gene regulatory networks.
+Description: BINDER infers gene regulatory networks by constructing two strata: a primary stratum and an auxiliary stratum. The primary stratum is composed of coexpression data from a primary organism of interest and is supplemented by auxiliary data in the form of motif predictions and known orthologous regulator-target interactions from a proxy organism. BINDER implements a Bayesian hierarchical model that appositely models the type and structure of both this primary and auxiliary data to infer the probability of a regulatory interaction between a regulator-target pair. The auxiliary data inform the prior distributions and the posterior distributions are updated by accounting for the primary coexpression data in a novel, apposite bivariate likelihood function.
 License: GPL-3
 Biarch: true
 Depends: 
