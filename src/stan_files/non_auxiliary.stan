@@ -9,21 +9,15 @@ data {
 }
 
 transformed data{
- matrix[N,M] trans_Y;
+ matrix[N,M] logit_Y;
 
- trans_Y = logit(Y);
+ logit_Y = logit(Y);
 }
 
 parameters {
- vector[N] trans_theta;
+ vector[N] logit_theta;
 
  vector<lower=0>[M] psi;
-}
-
-transformed parameters {
- vector<lower=0,upper=1>[N] theta;
-
- theta = inv_logit(trans_theta);
 }
 
 model {
@@ -32,6 +26,12 @@ model {
 
  // Likelihood:
  for(m in 1:M){
-  trans_Y[,m] ~ normal(trans_theta,psi[m]);
+  logit_Y[,m] ~ normal(logit_theta,psi[m]);
  }
+}
+
+generated quantities{
+ vector[N] theta;
+ 
+ theta = inv_logit(logit_theta);
 }

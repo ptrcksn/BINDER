@@ -4,11 +4,11 @@
 \alias{build_proxy_structure}
 \title{Build augmented structure comprising CM and CP values from coexpression, ME and PE values.}
 \usage{
-build_proxy_structure(ortholog_ME_PE_structure, coexpression, O,
-  delta_CM = "auto", delta_CP = "auto")
+build_proxy_structure(proxy_regulon, coexpression, O, delta_CM = "auto",
+  delta_CP = "auto")
 }
 \arguments{
-\item{ortholog_ME_PE_structure}{Data frame comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise) and `PE` (1 if orthologous interaction, 0 otherwise).}
+\item{proxy_regulon}{Data frame comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise) and `PE` (1 if orthologous interaction, 0 otherwise).}
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
