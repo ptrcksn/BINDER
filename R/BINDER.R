@@ -292,18 +292,27 @@ binder <- function(proxy_regulon, expression, O=list(), delta_CM="auto", delta_C
   }else{
     coexpression <- compute_coexpression(expression)
   }
-  proxy_regulon <- proxy_regulon[proxy_regulon$target_candidate %in% colnames(coexpression), ]
-  target_candidates <- proxy_regulon$target_candidate
   
-  proxy_structure <- build_proxy_structure(proxy_regulon, coexpression, O, delta_CM, delta_CP)
-  prepared_data <- prepare_data(proxy_structure)
-  if(model == "BINDER"){
-    results <- run_binder(prepared_data, mu_zeta=mu_zeta, sigma_zeta=sigma_zeta, mu_tau=mu_tau, sigma_tau=sigma_tau, mu_phi=mu_phi, sigma_phi=sigma_phi, mu_psi=mu_psi, sigma_psi=sigma_psi, model_summary=model_summary, model_summary_parameters=model_summary_parameters, model_name=model_name, fit=fit, chains=chains, iter=iter, warmup=warmup, thin=thin, init=init, seed=seed, algorithm=algorithm, control=control, sample_file=sample_file, diagnostic_file=diagnostic_file, save_dso=save_dso, verbose=verbose, include=include, cores=cores, open_progress=open_progress, chain_id=chain_id, init_r=init_r, test_grad=test_grad, append_samples=append_samples, refresh=refresh, enable_random_init=enable_random_init, save_warmup=save_warmup, boost_lib=boost_lib, eigen_lib=eigen_lib)
-  }else if(model == "non_auxiliary"){
-    results <- run_non_auxiliary_binder(prepared_data, mu_psi=mu_psi, sigma_psi=sigma_psi, model_summary=model_summary, model_summary_parameters=model_summary_parameters, model_name=model_name, fit=fit, chains=chains, iter=iter, warmup=warmup, thin=thin, init=init, seed=seed, algorithm=algorithm, control=control, sample_file=sample_file, diagnostic_file=diagnostic_file, save_dso=save_dso, verbose=verbose, include=include, cores=cores, open_progress=open_progress, chain_id=chain_id, init_r=init_r, test_grad=test_grad, append_samples=append_samples, refresh=refresh, enable_random_init=enable_random_init, save_warmup=save_warmup, boost_lib=boost_lib, eigen_lib=eigen_lib)
-  }else if(model == "deterministic"){
-    results <- run_deterministic_binder(prepared_data, mu_zeta=mu_zeta, sigma_zeta=sigma_zeta, mu_tau=mu_tau, sigma_tau=sigma_tau, mu_psi=mu_psi, sigma_psi=sigma_psi, model_summary=model_summary, model_summary_parameters=model_summary_parameters, model_name=model_name, fit=fit, chains=chains, iter=iter, warmup=warmup, thin=thin, init=init, seed=seed, algorithm=algorithm, control=control, sample_file=sample_file, diagnostic_file=diagnostic_file, save_dso=save_dso, verbose=verbose, include=include, cores=cores, open_progress=open_progress, chain_id=chain_id, init_r=init_r, test_grad=test_grad, append_samples=append_samples, refresh=refresh, enable_random_init=enable_random_init, save_warmup=save_warmup, boost_lib=boost_lib, eigen_lib=eigen_lib)
+  results <- list()
+  regulators <- unique(proxy_regulon$regulator)
+  n_regulators <- length(regulators)
+  for(n in 1:n_regulators){
+    current_regulator <- regulators[n]
+    current_proxy_regulon <- proxy_regulon[proxy_regulon$regulator == current_regulator, ]
+    current_proxy_regulon <- current_proxy_regulon[current_proxy_regulon$target_candidate %in% colnames(coexpression), ]
+    
+    proxy_structure <- build_proxy_structure(current_proxy_regulon, coexpression, O, delta_CM, delta_CP)
+    prepared_data <- prepare_data(proxy_structure)
+    if(model == "BINDER"){
+      current_results <- run_binder(prepared_data, mu_zeta=mu_zeta, sigma_zeta=sigma_zeta, mu_tau=mu_tau, sigma_tau=sigma_tau, mu_phi=mu_phi, sigma_phi=sigma_phi, mu_psi=mu_psi, sigma_psi=sigma_psi, model_summary=model_summary, model_summary_parameters=model_summary_parameters, model_name=model_name, fit=fit, chains=chains, iter=iter, warmup=warmup, thin=thin, init=init, seed=seed, algorithm=algorithm, control=control, sample_file=sample_file, diagnostic_file=diagnostic_file, save_dso=save_dso, verbose=verbose, include=include, cores=cores, open_progress=open_progress, chain_id=chain_id, init_r=init_r, test_grad=test_grad, append_samples=append_samples, refresh=refresh, enable_random_init=enable_random_init, save_warmup=save_warmup, boost_lib=boost_lib, eigen_lib=eigen_lib)
+    }else if(model == "non_auxiliary"){
+      current_results <- run_non_auxiliary_binder(prepared_data, mu_psi=mu_psi, sigma_psi=sigma_psi, model_summary=model_summary, model_summary_parameters=model_summary_parameters, model_name=model_name, fit=fit, chains=chains, iter=iter, warmup=warmup, thin=thin, init=init, seed=seed, algorithm=algorithm, control=control, sample_file=sample_file, diagnostic_file=diagnostic_file, save_dso=save_dso, verbose=verbose, include=include, cores=cores, open_progress=open_progress, chain_id=chain_id, init_r=init_r, test_grad=test_grad, append_samples=append_samples, refresh=refresh, enable_random_init=enable_random_init, save_warmup=save_warmup, boost_lib=boost_lib, eigen_lib=eigen_lib)
+    }else if(model == "deterministic"){
+      current_results <- run_deterministic_binder(prepared_data, mu_zeta=mu_zeta, sigma_zeta=sigma_zeta, mu_tau=mu_tau, sigma_tau=sigma_tau, mu_psi=mu_psi, sigma_psi=sigma_psi, model_summary=model_summary, model_summary_parameters=model_summary_parameters, model_name=model_name, fit=fit, chains=chains, iter=iter, warmup=warmup, thin=thin, init=init, seed=seed, algorithm=algorithm, control=control, sample_file=sample_file, diagnostic_file=diagnostic_file, save_dso=save_dso, verbose=verbose, include=include, cores=cores, open_progress=open_progress, chain_id=chain_id, init_r=init_r, test_grad=test_grad, append_samples=append_samples, refresh=refresh, enable_random_init=enable_random_init, save_warmup=save_warmup, boost_lib=boost_lib, eigen_lib=eigen_lib)
+    }
+    results[[current_regulator]] <- current_results
   }
+    
   return(results)
 }
 
