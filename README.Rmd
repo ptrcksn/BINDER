@@ -45,7 +45,7 @@ The main function of the `BINDER` package is the `BINDER::binder` function; this
 
 The `BINDER::binder` function comprises several function arguments (see `?BINDER::binder`); two of these arguments have no default values and require user-defined values: `proxy_regulon` and `expression`.
 
-`proxy_regulon` requires a data structure of class `data.frame` where each row is of the variables:
+`proxy_regulon` requires a data structure of class `data.frame` with the following columns:
 
 [`regulator` `target_candidate` `ortholog_module_status` `ME` `PE`]
 
@@ -103,7 +103,7 @@ Posterior 0.025%-0.975% credible interval for `zeta` for the putative regulator 
 results$Feature2$zeta_interval
 ```
 
-Similarly, the S4 class stanfit objects (see `?rstan::sampling`) representing the fitted results for each regulator model can also be inspected from via the object returned by the `BINDER::binder` function call; here are the first 3 Rhat values derived from `stanfit` objetct for Feature1:
+Similarly, the S4 class stanfit objects (see `?rstan::sampling`) representing the fitted results for each regulator model can also be inspected from via the object returned by the `BINDER::binder` function call; here are the first 3 `Rhat` values derived from `stanfit` objetct for Feature1:
 ```{r}
 rstan::summary(results[["Feature1"]]$model_object)$summary[1:3, "Rhat"]
 ```

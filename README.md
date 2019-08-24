@@ -55,8 +55,8 @@ The `BINDER::binder` function comprises several function arguments (see
 `?BINDER::binder`); two of these arguments have no default values and
 require user-defined values: `proxy_regulon` and `expression`.
 
-`proxy_regulon` requires a data structure of class `data.frame` where
-each row is of the variables:
+`proxy_regulon` requires a data structure of class `data.frame` with the
+following columns:
 
 \[`regulator` `target_candidate` `ortholog_module_status` `ME` `PE`\]
 
@@ -78,11 +78,11 @@ proxy_regulon$PE <- ifelse(proxy_regulon$ortholog_module_status == 0, 0, proxy_r
 head(proxy_regulon)
 #>   regulator target_candidate ortholog_module_status ME PE
 #> 1  Feature1         Feature1                      0  0  0
-#> 2  Feature1         Feature2                      1  1  0
-#> 3  Feature1         Feature3                      1  0  0
-#> 4  Feature1         Feature4                      1  0  0
-#> 5  Feature1         Feature5                      0  1  0
-#> 6  Feature1         Feature6                      1  1  1
+#> 2  Feature1         Feature2                      1  0  1
+#> 3  Feature1         Feature3                      0  1  0
+#> 4  Feature1         Feature4                      1  0  1
+#> 5  Feature1         Feature5                      1  0  0
+#> 6  Feature1         Feature6                      0  0  0
 ```
 
 `expression` comprises an `N*M` matrix where each row corresponds to a
@@ -101,12 +101,12 @@ expression <- matrix(rgamma((N*M), 1, 1), nrow=N) # Simulate expression data.
 rownames(expression) <- paste0("Feature", 1:N) # Names of features of interest.
 colnames(expression) <- paste0("Sample", 1:M) # Names of samples/experimental conditions.
 expression[1:5, 1:5]
-#>            Sample1   Sample2   Sample3   Sample4    Sample5
-#> Feature1 0.2693506 1.2489926 0.6935794 1.4188841 0.47084135
-#> Feature2 0.9678009 0.6253741 0.9306326 0.5248749 0.18226291
-#> Feature3 5.6411044 0.4081487 3.2908654 2.0215809 0.61915823
-#> Feature4 0.4211840 3.1334130 0.8047565 3.3994354 0.01262415
-#> Feature5 0.9249148 0.4053334 3.5632255 0.4812888 0.01551372
+#>            Sample1    Sample2    Sample3   Sample4   Sample5
+#> Feature1 0.9419525 1.86626376 0.83296264 1.2543381 1.6411305
+#> Feature2 0.6543574 1.26581845 0.19091606 0.5420611 1.4454896
+#> Feature3 4.0205033 0.04930548 2.37388265 0.5261245 1.8328811
+#> Feature4 1.0204354 0.43533193 0.80722164 0.2643896 0.4373572
+#> Feature5 1.0671127 0.65192464 0.09135318 1.1526399 2.5746012
 ```
 
 ### Run BINDER
@@ -144,7 +144,7 @@ to the putative regulator Feature1:
 ``` r
 results[["Feature1"]]$mean_theta[1:5]
 #>  Feature1  Feature2  Feature3  Feature4  Feature5 
-#> 0.2695598 0.1900025 0.2595906 0.2702575 0.2060873
+#> 0.2416932 0.2584999 0.2533846 0.2581473 0.2569062
 ```
 
 Posterior 0.025%-0.975% credible interval for `zeta` for the putative
@@ -152,18 +152,18 @@ regulator Feature2:
 
 ``` r
 results$Feature2$zeta_interval
-#>      0.025      0.975 
-#> -10.611362  -4.729512
+#>     0.025     0.975 
+#> -8.944301 -3.077080
 ```
 
 Similarly, the S4 class stanfit objects (see `?rstan::sampling`)
 representing the fitted results for each regulator model can also be
 inspected from via the object returned by the `BINDER::binder` function
-call; here are the first 3 Rhat values derived from `stanfit` objetct
+call; here are the first 3 `Rhat` values derived from `stanfit` objetct
 for Feature1:
 
 ``` r
 rstan::summary(results[["Feature1"]]$model_object)$summary[1:3, "Rhat"]
 #>     zeta   tau[1]   tau[2] 
-#> 1.001452 1.000253 1.000157
+#> 1.001776 1.000745 1.000233
 ```
