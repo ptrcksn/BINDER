@@ -1,6 +1,6 @@
 #' The 'BINDER' package.
 #'
-#' @description BINDER (BayesIan gene regulatory Networks inferreD via gene Expression and compaRative genomics) is a hybrid approach, binding coexpression and comparative genomics to infer prokaryotic regulons.
+#' @description BINDER (BayesIan gene regulatory Networks inferreD via gene coExpression and compaRative genomics) is a hybrid approach, binding coexpression and comparative genomics to infer prokaryotic regulons.
 #'
 #' @docType package
 #' @name BINDER-package

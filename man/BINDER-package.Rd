@@ -6,7 +6,7 @@
 \alias{BINDER}
 \title{The 'BINDER' package.}
 \description{
-BINDER (BayesIan gene regulatory Networks inferreD via gene Expression and compaRative genomics) is a hybrid approach, binding coexpression and comparative genomics to infer prokaryotic regulons.
+BINDER (BayesIan gene regulatory Networks inferreD via gene coExpression and compaRative genomics) is a hybrid approach, binding coexpression and comparative genomics to infer prokaryotic regulons.
 }
 \references{
 Stan Development Team (2018). RStan: the R interface to Stan. R package version 2.18.2. http://mc-stan.org

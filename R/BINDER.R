@@ -287,6 +287,7 @@ run_deterministic_binder <- function(prepared_data, mu_zeta=0, sigma_zeta=3, mu_
 #'   }
 #'
 binder <- function(proxy_regulon, expression, O=list(), delta_CM="auto", delta_CP="auto", is_coexpression=FALSE, model="BINDER", mu_zeta=0, sigma_zeta=3, mu_tau=c(0,0), sigma_tau=c(3,3), mu_phi=0, sigma_phi=3, mu_psi=c(0,0), sigma_psi=c(3,3), model_summary=FALSE, model_summary_parameters, model_name="anon_model", fit=NA, chains=4, iter=2000, warmup=floor(iter/2), thin=1, init="random", seed=sample.int(.Machine$integer.max, 1), algorithm=c("NUTS", "HMC", "Fixed_param"), control=NULL, sample_file=NULL, diagnostic_file=NULL, save_dso=TRUE, verbose=FALSE, include=TRUE, cores=getOption("mc.cores", 1L), open_progress=interactive() && !isatty(stdout()) && !identical(Sys.getenv("RSTUDIO"), "1"), chain_id, init_r, test_grad=FALSE, append_samples, refresh=max(iter/10, 1), enable_random_init, save_warmup=TRUE, boost_lib=NULL, eigen_lib=NULL){
+  proxy_regulon %>% dplyr::mutate_if(is.factor, as.character) -> proxy_regulon
   if(is_coexpression == TRUE){
     coexpression <- expression
   }else{
