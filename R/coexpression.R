@@ -9,14 +9,13 @@
 #' @param threshold Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @return Character vector containing genes sharing a coexpression with `target_candidate` greater than `threshold`.
 #'
-find_coexpression_module <- function(target_candidate, coexpression, o, threshold="auto"){
+find_coexpression_module <- function(target_candidate, coexpression, o=NULL, threshold="auto"){
   threshold <- (if(identical(threshold, "auto")) quantile(coexpression[target_candidate, -which(colnames(coexpression) %in% union(target_candidate, o))], 0.95, na.rm=TRUE) else threshold)
   coexpression_module <- setdiff(colnames(coexpression)[coexpression[target_candidate, ] > threshold], union(target_candidate, o))
   return(coexpression_module)
 }
 
 #----------------------------------------------------------------------------------------------------
-
 
 #' Compute CM value for target candidate.
 #'
@@ -29,7 +28,7 @@ find_coexpression_module <- function(target_candidate, coexpression, o, threshol
 #' @param threshold Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @return CM value for `target_candidate`.
 #'
-compute_CM <- function(target_candidate, target_candidates, ME_module, coexpression, o, threshold="auto"){
+compute_CM <- function(target_candidate, target_candidates, ME_module, coexpression, o=NULL, threshold="auto"){
   coexpression_module <- find_coexpression_module(target_candidate, coexpression, threshold)
   
   n_in_coexpression_module <- length(coexpression_module)
@@ -53,7 +52,7 @@ compute_CM <- function(target_candidate, target_candidates, ME_module, coexpress
 #' @param threshold Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @return Numerical vector containing CM values for `target_candidates`.
 #'
-compute_CMs <- function(target_candidates, ME_module, coexpression, O, threshold="auto"){
+compute_CMs <- function(target_candidates, ME_module, coexpression, O=NULL, threshold="auto"){
   CMs <- as.numeric(sapply(target_candidates, function(x){compute_CM(x, target_candidates, ME_module, coexpression, O[[x]], threshold)}))
   CMs <- 1-p.adjust((1-CMs), method="fdr") # FDR-based adjustment.
   CM_structure <- data.frame(target_candidate=target_candidates, CM=CMs)
@@ -74,7 +73,7 @@ compute_CMs <- function(target_candidates, ME_module, coexpression, O, threshold
 #' @param threshold Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @return CP value for `target_candidate`.
 #'
-compute_CP <- function(target_candidate, target_candidates, PE_module, ortholog_module, coexpression, o, threshold="auto"){
+compute_CP <- function(target_candidate, target_candidates, PE_module, ortholog_module, coexpression, o=NULL, threshold="auto"){
   coexpression_module <- find_coexpression_module(target_candidate, coexpression, threshold)
   
   n_in_coexpression_module <- length(intersect(coexpression_module, ortholog_module)) #length(coexpression_module)
@@ -98,7 +97,7 @@ compute_CP <- function(target_candidate, target_candidates, PE_module, ortholog_
 #' @param threshold Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @return Numerical vector containing CP values for `target_candidates`.
 #'
-compute_CPs <- function(target_candidates, PE_module, ortholog_module, coexpression, O, threshold="auto"){
+compute_CPs <- function(target_candidates, PE_module, ortholog_module, coexpression, O=NULL, threshold="auto"){
   CPs <- as.numeric(sapply(target_candidates, function(x){compute_CP(x, target_candidates, PE_module, ortholog_module, coexpression, O[[x]], threshold)}))
   CPs <- 1-p.adjust((1-CPs), method="fdr") # FDR-based adjustment.
   CP_structure <- data.frame(target_candidate=target_candidates, CP=CPs)

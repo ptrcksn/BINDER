@@ -4,22 +4,22 @@
 \alias{build_proxy_structure}
 \title{Build augmented structure comprising CM and CP values from coexpression, ME and PE values.}
 \usage{
-build_proxy_structure(proxy_regulon, coexpression, O, delta_CM = "auto",
-  delta_CP = "auto")
+build_proxy_structure(proxy_regulon, coexpression, O = NULL,
+  delta_CM = "auto", delta_CP = "auto")
 }
 \arguments{
-\item{proxy_regulon}{Data frame comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise) and `PE` (1 if orthologous interaction, 0 otherwise).}
+\item{proxy_regulon}{Data frame comprising columns: \code{regulator}, \code{target_candidate}, \code{ortholog_module_status} (1 if orthologous, 0 otherwise), \code{ME} (1 if high affinity for regulator motif, 0 otherwise) and \code{PE} (1 if orthologous interaction, 0 otherwise).}
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CM` and `CP` for the corresponding target candidate name; by default only autocoexpression is excluded.}
+\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of \code{CM} and \code{CP} for the corresponding target candidate name; by default only autocoexpression is excluded.}
 
-\item{delta_CM}{Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{delta_CM}{Numerical cutoff point for coexpression module for CM: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
 
-\item{delta_CP}{Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{delta_CP}{Numerical cutoff point for coexpression module for CM: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
 }
 \value{
-Data frame implementing augmented structure comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise), `PE` (1 if orthologous interaction, 0 otherwise), `CM` and `CP`.
+Data frame implementing augmented structure comprising columns: \code{regulator}, \code{target_candidate}, \code{ortholog_module_status} (1 if orthologous, 0 otherwise), \code{ME} (1 if high affinity for regulator motif, 0 otherwise), \code{PE} (1 if orthologous interaction, 0 otherwise), \code{CM} and \code{CP}.
 }
 \description{
 Build augmented structure comprising CM and CP values from coexpression, ME and PE values.

@@ -4,7 +4,7 @@
 \alias{find_coexpression_module}
 \title{Generate coexpression module for target candidate.}
 \usage{
-find_coexpression_module(target_candidate, coexpression, o,
+find_coexpression_module(target_candidate, coexpression, o = NULL,
   threshold = "auto")
 }
 \arguments{
@@ -12,12 +12,12 @@ find_coexpression_module(target_candidate, coexpression, o,
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{o}{Character vector comprising names of genes which should not be included in the computation of `CM` and `CP` for `target_candidate`.}
+\item{o}{Character vector comprising names of genes which should not be included in the computation of \code{CM} and \code{CP} for \code{target_candidate}.}
 
-\item{threshold}{Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{threshold}{Numerical cutoff point: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
 }
 \value{
-Character vector containing genes sharing a coexpression with `target_candidate` greater than `threshold`.
+Character vector containing genes sharing a coexpression with \code{target_candidate} greater than \code{threshold}.
 }
 \description{
 Generate coexpression module for target candidate.

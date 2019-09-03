@@ -4,7 +4,7 @@
 \alias{compute_CMs}
 \title{Compute CM values for all target candidates.}
 \usage{
-compute_CMs(target_candidates, ME_module, coexpression, O,
+compute_CMs(target_candidates, ME_module, coexpression, O = NULL,
   threshold = "auto")
 }
 \arguments{
@@ -14,12 +14,12 @@ compute_CMs(target_candidates, ME_module, coexpression, O,
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CM` for the corresponding target candidate name; by default only autocoexpression is excluded.}
+\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of \code{CM} for the corresponding target candidate name; by default only autocoexpression is excluded.}
 
-\item{threshold}{Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{threshold}{Numerical cutoff point: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
 }
 \value{
-Numerical vector containing CM values for `target_candidates`.
+Numerical vector containing CM values for \code{target_candidates}.
 }
 \description{
 Compute CM values for all target candidates.

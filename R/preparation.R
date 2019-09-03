@@ -10,7 +10,7 @@
 #' @param delta_CP Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.
 #' @return Data frame implementing augmented structure comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise), `PE` (1 if orthologous interaction, 0 otherwise), `CM` and `CP`.
 #'
-build_proxy_structure <- function(proxy_regulon, coexpression, O, delta_CM="auto", delta_CP="auto"){
+build_proxy_structure <- function(proxy_regulon, coexpression, O=NULL, delta_CM="auto", delta_CP="auto"){
   regulator <- unique(proxy_regulon$regulator)
   target_candidates <- proxy_regulon$target_candidate
   
@@ -50,10 +50,8 @@ prepare_data <- function(proxy_structure){
   rownames(Y) <- target_candidate
   
   N <- nrow(X)
-  K <- ncol(X)
-  M <- ncol(Y)
   
-  prepared_data <- list(regulator=regulator, target_candidate=target_candidate, N=N, K=K, M=M, X=X, Y=Y)
+  prepared_data <- list(regulator=regulator, target_candidate=target_candidate, N=N, X=X, Y=Y)
   return(prepared_data)
 }
 

@@ -4,87 +4,42 @@
 \alias{binder}
 \title{BINDER wrapper function.}
 \usage{
-binder(proxy_regulon, expression, O = list(), delta_CM = "auto",
-  delta_CP = "auto", is_coexpression = FALSE, model = "BINDER",
-  mu_zeta = 0, sigma_zeta = 3, mu_tau = c(0, 0), sigma_tau = c(3,
-  3), mu_phi = 0, sigma_phi = 3, mu_psi = c(0, 0), sigma_psi = c(3,
-  3), model_summary = FALSE, model_summary_parameters,
-  model_name = "anon_model", fit = NA, chains = 4, iter = 2000,
-  warmup = floor(iter/2), thin = 1, init = "random",
-  seed = sample.int(.Machine$integer.max, 1), algorithm = c("NUTS",
-  "HMC", "Fixed_param"), control = NULL, sample_file = NULL,
-  diagnostic_file = NULL, save_dso = TRUE, verbose = FALSE,
-  include = TRUE, cores = getOption("mc.cores", 1L),
-  open_progress = interactive() && !isatty(stdout()) &&
-  !identical(Sys.getenv("RSTUDIO"), "1"), chain_id, init_r,
-  test_grad = FALSE, append_samples, refresh = max(iter/10, 1),
-  enable_random_init, save_warmup = TRUE, boost_lib = NULL,
-  eigen_lib = NULL)
+binder(proxy_regulon, expression, hyperparams = NULL, inits = NULL,
+  O = NULL, delta_CM = "auto", delta_CP = "auto",
+  is_coexpression = FALSE, model = "BINDER", n_chains = 1,
+  n_draws = 1000, burn_in = 0, thin = 0, n_cores = 1, seed = 1)
 }
 \arguments{
-\item{proxy_regulon}{Data frame comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise) and `PE` (1 if orthologous interaction, 0 otherwise).}
+\item{proxy_regulon}{Data frame comprising columns: \code{regulator}, \code{target_candidate}, \code{ortholog_module_status} (1 if orthologous, 0 otherwise), \code{ME} (1 if high affinity for regulator motif, 0 otherwise) and \code{PE} (1 if orthologous interaction, 0 otherwise).}
 
 \item{expression}{Numerical expression matrix; can be expression matrix with genes represented on rows and experimental conditions represented on columns or symmetric gene-gene coexpression matrix.}
 
-\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of `CM` and `CP` for the corresponding target candidate name; by default only autocoexpression is excluded.}
+\item{hyperparams}{A named list of user-defined hyperparameters (see \code{?BINDER::run_sampler_binder}, \code{?BINDER::run_sampler_non_auxiliary} and \code{?BINDER::run_sampler_deterministic}).}
 
-\item{delta_CM}{Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{inits}{A named list of user-defined initial values to begin each MCMC chain (see \code{?BINDER::run_sampler_binder}, \code{?BINDER::run_sampler_non_auxiliary} and \code{?BINDER::run_sampler_deterministic}).}
 
-\item{delta_CP}{Numerical cutoff point for coexpression module for CM: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{O}{Named list where each name is a target candidate and each element is a character vector comprising names of genes that should not be included in the computation of \code{CM} and \code{CP} for the corresponding target candidate name; by default only autocoexpression is excluded.}
+
+\item{delta_CM}{Numerical cutoff point for coexpression module for CM: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
+
+\item{delta_CP}{Numerical cutoff point for coexpression module for CM: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
 
 \item{is_coexpression}{logical; if TRUE, expression matrix is treated as symmetric coexpression matrix.}
 
 \item{model}{Indicates which model should be fit to the data: one of "BINDER", "non_auxiliary" or "deterministic".}
 
-\item{mu_zeta}{Prior mean for zeta; the default is 0.}
+\item{n_chains}{Number of MCMC chains to run; defaults to 1.}
 
-\item{sigma_zeta}{Prior standard deviation for zeta; the default is 3.}
+\item{n_draws}{Number of MCMC draws to run; defaults to 1000.}
 
-\item{mu_tau}{Prior mean vector for tau; the default is c(0,0).}
+\item{burn_in}{Number of MCMC draws to discard from the beginning of each chain; defaults to 0.}
 
-\item{sigma_tau}{Prior standard deviation vector for tau; the default is c(3,3).}
+\item{thin}{Number of MCMC draws to discard between each accepted MCMC draw for each chain; defaults to 0.}
 
-\item{mu_phi}{Prior mean for phi; the default is 0.}
-
-\item{sigma_phi}{Prior standard deviation for phi; the default is 3.}
-
-\item{mu_psi}{Prior mean vector for psi; the default is c(0,0).}
-
-\item{sigma_psi}{Prior standard deviation vector for psi; the default is c(3,3).}
-
-\item{model_summary}{logical; if TRUE, a model summary of parameter estimates is printed upon completion of BINDER run; defaults to FALSE.}
-
-\item{model_summary_parameters}{A vector of parameters to include in model summary.}
-
-\item{...}{Arguments passed to `rstan::sampling` (e.g. iter, chains).}
+\item{seed}{Seed for random number generation; defaults to 1.}
 }
 \value{
-A list with the following components:
-  \itemize{
-    \item regulator - the name of the regulator provided to BINDER.
-    \item target_candidate - a vector providing the names of each target candidate provided to BINDER.
-    \item ME - a vector providing ME values for each target candidate provided to BINDER.
-    \item PE - a vector providing PE values for each target candidate provided to BINDER.
-    \item CM - a vector providing CM values for each target candidate provided to BINDER.
-    \item CP - a vector providing CP values for each target candidate provided to BINDER.
-    \item mean_theta - a vector providing posterior mean values for theta for each target candidate provided to BINDER.
-    \item theta_interval - a matrix providing posterior 0.025, 0.5 and 0.975 quantiles for theta for each target candidate provided to BINDER.
-    \item mean_gamma - a vector providing posterior mean values for gamma for each target candidate provided to BINDER.
-    \item gamma_interval - a matrix providing posterior 0.025 and 0.975 quantiles for gamma for each target candidate provided to BINDER.
-    \item mean_raw_gamma - a vector providing posterior mean values for raw_gamma for each target candidate provided to BINDER.
-    \item raw_gamma_interval - a matrix providing posterior 0.025 and 0.975 quantiles for raw_gamma for each target candidate provided to BINDER.
-    \item mean_phi - posterior mean for phi as estimated by BINDER.
-    \item phi_interval - a vector providing posterior 0.025 and 0.975 quantiles for phi as estimated by BINDER.
-    \item mean_zeta - posterior mean for zeta as estimated by BINDER.
-    \item zeta_interval - a vector posterior 0.025 and 0.975 quantiles for zeta as estimated by BINDER.
-    \item mean_tau - a vector providing posterior mean values for tau as estimated by BINDER.
-    \item tau_interval - a matrix providing posterior 0.025 and 0.975 quantiles for tau as estimated by BINDER.
-    \item mean_psi - a vector providing posterior mean values for psi as estimated by BINDER.
-    \item psi_interval - a matrix providing posterior 0.025 and 0.975 quantiles for psi as estimated by BINDER.
-    \item posterior_samples_theta - a matrix providing posterior samples for each target candidate provided to BINDER.
-    \item posterior_samples_psi - a matrix providing posterior samples for each psi element as estimated by BINDER.
-    \item model_object - object of class `stanfit` returned by `rstan::sampling`.
-  }
+A list containing the MCMC draws for each model parameter for each chain for each putative regulor in \code{proxy_regulon}.
 }
 \description{
 BINDER wrapper function.

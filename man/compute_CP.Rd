@@ -5,7 +5,7 @@
 \title{Compute CP value for target candidate.}
 \usage{
 compute_CP(target_candidate, target_candidates, PE_module, ortholog_module,
-  coexpression, o, threshold = "auto")
+  coexpression, o = NULL, threshold = "auto")
 }
 \arguments{
 \item{target_candidate}{Target candidate for which CP value is computed.}
@@ -18,12 +18,12 @@ compute_CP(target_candidate, target_candidates, PE_module, ortholog_module,
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{o}{Character vector comprising names of genes which should not be included in the computation of `CP` for `target_candidate`.}
+\item{o}{Character vector comprising names of genes which should not be included in the computation of \code{CP} for \code{target_candidate}.}
 
-\item{threshold}{Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{threshold}{Numerical cutoff point: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
 }
 \value{
-CP value for `target_candidate`.
+CP value for \code{target_candidate}.
 }
 \description{
 Compute CP value for target candidate.

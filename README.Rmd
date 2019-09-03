@@ -33,6 +33,16 @@ if(!require("devtools")){ install.packages("devtools") } # Install devtools R pa
 devtools::install_github("ptrcksn/BINDER") # Install BINDER R package from GitHub.
 ```
 
+This will install the most recent version of the `BINDER` R package.
+
+(NOTE: The most recent iteration of `BINDER` uses a Gibbs sampling approach (as opposed to the original HMC approach facilitated by Stan) to estimate the posterior distribution of interest; in order to facilitate the Gibbs sampling procedure, the scale parameters in the current iteration assume independent inverse gamma prior distributions (as opposed to independent truncated normal prior distributions as per original approach) and the slope parameters in the auxiliary stratum assume independent normal prior distributions (as opposed to independent truncated normal prior distributions as per original approach). We find little distinction between the implementations in terms of the estimated posterior distribution; however, we find the current iteration is considerably faster to run. If you desire the original HMC approach facilitated by Stan, you can install this version by specifying this in the call to `devtools::installgithub`:
+
+```
+devtools::install_github("ptrcksn/BINDER", ref="bcfbec3") # Install HMC implementation of BINDER R package from GitHub.
+```
+
+If you are unsure as to which implementation to install, we recommend ignoring this note and installing the most recent implementation as per the initial installation instructions.)
+
 ### Simulate some data
 
 Let's define our data such that we have `N` candidate features of interest and `M` samples/experimental conditions:
@@ -51,7 +61,7 @@ The `BINDER::binder` function comprises several function arguments (see `?BINDER
 
 Each column of `proxy_regulon` should be named and ordered as above.
 
-Let's simulate a `proxy_regulon` structure where Feature1 and Feature2 represent putative regulators and Feature1, Feature2, ..., Feature500 represent target candiates for both putative regulators.
+Let's simulate a `proxy_regulon` structure where Feature1 and Feature2 represent putative regulators and Feature1, Feature2, ..., Feature500 represent target candiates for both putative regulators:
 ```{r}
 # Simulate proxy regulon data frame:
 proxy_regulon <- data.frame(
@@ -64,7 +74,7 @@ proxy_regulon$PE <- ifelse(proxy_regulon$ortholog_module_status == 0, 0, proxy_r
 head(proxy_regulon)
 ```
 
-`expression` comprises an `N*M` matrix where each row corresponds to a putative target feature of interest and each column corresponds to a sample/experimental condition; the `n,m`th element corresponds to the expression value for the `n`th feature of interest under the `m`th sample/experimental condition. Each row should be named by its associated feature.
+`expression` comprises an `N*M` matrix where each row corresponds to a putative target feature of interest and each column corresponds to a sample/experimental condition; element `n,m` corresponds to the expression value for the `n`th feature of interest under the `m`th sample/experimental condition. Each row should be named by its associated feature.
 
 Let's simulate an `expression` structure for each of the `N` features of interest across the `M` samples/experimental conditions:
 ```{r}
@@ -79,10 +89,7 @@ expression[1:5, 1:5]
 
 Given these two data structures, the BINDER model implementation can be invoked.
 
-If you want to run `BINDER::binder` in parallel, you can alter the `mc.cores` global option; for example, to run `BINDER::binder` on 3 cores, you can specify the following (see `?options` and `?parallel`):
-```{r}
-options(mc.cores=3)
-```
+Although only the arguments `proxy_regulon` and `expression` require user-specification, the `BINDER::binder` function also comprises several function arguments in its function header that pertain to hyperparameters, initial values for the MCMC sampler, thresholding values, number of MCMC chains to run, number of draws from each MCMC chain, extent of thinning and burn-in on the resulting MCMC chains, parallelisation options and more. All function arguments except for `proxy_regulon` and `expression` exhibit default behaviour in the absence of user-specifcation; for details see `?BINDER::binder`.
 
 Let's run the `BINDER::binder` function on the simulated `proxy_regulon` and `expression` data structures:
 ```{r, include = FALSE}
@@ -98,20 +105,28 @@ this means that BINDER treats the expression matrix supplied to the function as 
 
 ### Access BINDER results
 
-The object returned by the call to `BINDER::binder` comprises a list of lists; each element of the top-level list corresponds to a regulator, itself comprising a list of model results as pertains to that regulator. Various results derived from the BINDER modelling process can be accessed from the list of lists returned by the call to `BINDER::binder`.
+The object returned by the call to `BINDER::binder` comprises a two-dimensional list; each element of the top-level list corresponds to a regulator, itself comprising a list of MCMC chains (of length equal to `n_chains`); for a given regulator `r` and chain `c`, each chain comprises a two-dimensional structure containing the MCMC draws (rows) for each model parameter (columns) for chain `c` and regulator `r`. Various results derived from the BINDER modelling process can be accessed from the structure returned by the call to `BINDER::binder`.
 
-Posterior mean for `theta` for the first 5 target candidates pertaining to the putative regulator Feature1:
+The first 10 posterior draws for `theta` for \{Feature1, Feature1\}, \{Feature1, Feature2\} and \{Feature1, Feature3\} on chain 1 can be accessed by:
 ```{r}
-results[["Feature1"]]$mean_theta[1:5]
+results[["Feature1"]][[1]][1:10, 1:3]
 ```
 
-Posterior 0.025%-0.975% credible interval for `zeta` for the putative regulator Feature2:
+The 5th, 9th and 11th posterior draws for `theta` for \{Feature2, Feature11\}, logit(`theta`) for \{Feature2, Feature9\}, `zeta` and `tau_ME` on chain 1 can be accessed by:
+
 ```{r}
-results$Feature2$zeta_interval
+results$Feature2[[1]][c(5, 9, 11), c("theta[Feature11]", "logit(theta[Feature9])", "zeta", "tau_ME")]
 ```
 
-Similarly, the S4 class stanfit objects (see `?rstan::sampling`) representing the fitted results for each regulator model can also be inspected from via the object returned by the `BINDER::binder` function call; here are the first 3 `Rhat` values derived from `stanfit` objetct for Feature1:
+You can also access summaries (mean, standard deviation and 0%, 25%, 50%, 75% and 100% quantiles) pertaining to the posterior distribution of `theta` for each regulator-target candidate pair of interest using the custom `summary` method with an instance of `posteriorDraws` (such as that returned by `BINDER::binder`):
+
 ```{r}
-rstan::summary(results[["Feature1"]]$model_object)$summary[1:3, "Rhat"]
+head(summary(results))
 ```
 
+The default behaviour of `summary` is to provide posterior summaries for all regulator-target candidate pairs; however, if you are interested in a particular set of summaries, you can specify the the regulator-target canididates through the `target_candidates` function argument:
+
+```{r}
+relevant_target_candidates <- list("Feature1"=c("Feature1", "Feature7"), "Feature2"=c("Feature11", "Feature15"))
+summary(results, target_candidates=relevant_target_candidates)
+```

@@ -7,10 +7,10 @@
 prepare_data(proxy_structure)
 }
 \arguments{
-\item{proxy_structure}{Data frame returned by `build_proxy_structure` implementing augmented structure comprising columns: `regulator`, `target_candidate`, `ortholog_module_status` (1 if orthologous, 0 otherwise), `ME` (1 if high affinity for regulator motif, 0 otherwise), `PE` (1 if orthologous interaction, 0 otherwise), `CM` and `CP`.}
+\item{proxy_structure}{Data frame returned by \code{build_proxy_structure} implementing augmented structure comprising columns: \code{regulator}, \code{target_candidate}, \code{ortholog_module_status} (1 if orthologous, 0 otherwise), \code{ME} (1 if high affinity for regulator motif, 0 otherwise), \code{PE} (1 if orthologous interaction, 0 otherwise), \code{CM} and \code{CP}.}
 }
 \value{
-List comprising `regulator`, `target_candidate`, `N` (number of regulator-target observations), `K` (number of variables in the auxiliary stratum := 2 (i.e. ME and PE)), `M` (number of variables in the primary stratum := 2 (i.e. CM and CP)), `X` (matrix comprising the variables in the auxiliary stratum (ME, PE)), `Y` (matrix comprising the variables in the primary stratum (CM, CP)).
+List comprising \code{regulator}, \code{target_candidate}, \code{N} (number of regulator-target observations), \code{K} (number of variables in the auxiliary stratum := 2 (i.e. ME and PE)), \code{M} (number of variables in the primary stratum := 2 (i.e. CM and CP)), \code{X} (matrix comprising the variables in the auxiliary stratum (ME, PE)), \code{Y} (matrix comprising the variables in the primary stratum (CM, CP)).
 }
 \description{
 Prepare data for use in BINDER model.

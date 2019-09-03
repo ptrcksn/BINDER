@@ -9,22 +9,14 @@ Authors@R: as.person(c(
   ))
 Description: BINDER infers gene regulatory networks by constructing two strata: a primary stratum and an auxiliary stratum. The primary stratum is composed of coexpression data from a primary organism of interest and is supplemented by auxiliary data in the form of motif predictions and known orthologous regulator-target interactions from a proxy organism. BINDER implements a Bayesian hierarchical model that appositely models the type and structure of both this primary and auxiliary data to infer the probability of a regulatory interaction between a regulator-target candidate pair. The auxiliary data inform the prior distributions and the posterior distributions are updated by accounting for the primary coexpression data in a novel, apposite bivariate likelihood function.
 License: GPL-3
-Biarch: true
-Depends: 
-    R (>= 3.4.0)
-Imports: 
-    methods,
-    Rcpp (>= 0.12.0),
-    rstan (>= 2.18.1),
-    rstantools (>= 1.5.1.9000),
-    plyr,
-    dplyr,
-    magrittr
-LinkingTo: 
-    BH (>= 1.66.0),
-    Rcpp (>= 0.12.0),
-    RcppEigen (>= 0.3.3.3.0),
-    rstan (>= 2.18.1),
-    StanHeaders (>= 2.18.0)
 Encoding: UTF-8
+LazyData: true
+Imports:
+    doSNOW,
+    dplyr,
+    foreach,
+    magrittr,
+    parallel,
+    plyr
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.0

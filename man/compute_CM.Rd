@@ -4,8 +4,8 @@
 \alias{compute_CM}
 \title{Compute CM value for target candidate.}
 \usage{
-compute_CM(target_candidate, target_candidates, ME_module, coexpression, o,
-  threshold = "auto")
+compute_CM(target_candidate, target_candidates, ME_module, coexpression,
+  o = NULL, threshold = "auto")
 }
 \arguments{
 \item{target_candidate}{Target candidate for which CM value is computed.}
@@ -16,12 +16,12 @@ compute_CM(target_candidate, target_candidates, ME_module, coexpression, o,
 
 \item{coexpression}{Numerical symmetric matrix providing gene coexpression values.}
 
-\item{o}{Character vector comprising names of genes which should not be included in the computation of `CM` for `target_candidate`.}
+\item{o}{Character vector comprising names of genes which should not be included in the computation of \code{CM} for \code{target_candidate}.}
 
-\item{threshold}{Numerical cutoff point: any values above `threshold` are considered to form a coexpression module with `target_candidate`; defaults to "auto" which represents the 95th percentile of coexpression scores involving `target_candidate`.}
+\item{threshold}{Numerical cutoff point: any values above \code{threshold} are considered to form a coexpression module with \code{target_candidate}; defaults to "auto" which represents the 95th percentile of coexpression scores involving \code{target_candidate}.}
 }
 \value{
-CM value for `target_candidate`.
+CM value for \code{target_candidate}.
 }
 \description{
 Compute CM value for target candidate.
