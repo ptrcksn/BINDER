@@ -77,12 +77,12 @@ proxy_regulon <- data.frame(
 proxy_regulon$PE <- ifelse(proxy_regulon$ortholog_module_status == 0, 0, proxy_regulon$PE)
 head(proxy_regulon)
 #>   regulator target_candidate ortholog_module_status ME PE
-#> 1  Feature1         Feature1                      0  0  0
-#> 2  Feature1         Feature2                      1  0  1
-#> 3  Feature1         Feature3                      0  1  0
-#> 4  Feature1         Feature4                      1  0  1
-#> 5  Feature1         Feature5                      1  0  0
-#> 6  Feature1         Feature6                      0  0  0
+#> 1  Feature1         Feature1                      1  1  0
+#> 2  Feature1         Feature2                      1  0  0
+#> 3  Feature1         Feature3                      1  1  0
+#> 4  Feature1         Feature4                      0  1  0
+#> 5  Feature1         Feature5                      0  0  0
+#> 6  Feature1         Feature6                      1  0  1
 ```
 
 `expression` comprises an `N*M` matrix where each row corresponds to a
@@ -101,19 +101,29 @@ expression <- matrix(rgamma((N*M), 1, 1), nrow=N) # Simulate expression data.
 rownames(expression) <- paste0("Feature", 1:N) # Names of features of interest.
 colnames(expression) <- paste0("Sample", 1:M) # Names of samples/experimental conditions.
 expression[1:5, 1:5]
-#>            Sample1    Sample2    Sample3   Sample4   Sample5
-#> Feature1 0.9419525 1.86626376 0.83296264 1.2543381 1.6411305
-#> Feature2 0.6543574 1.26581845 0.19091606 0.5420611 1.4454896
-#> Feature3 4.0205033 0.04930548 2.37388265 0.5261245 1.8328811
-#> Feature4 1.0204354 0.43533193 0.80722164 0.2643896 0.4373572
-#> Feature5 1.0671127 0.65192464 0.09135318 1.1526399 2.5746012
+#>            Sample1   Sample2   Sample3    Sample4    Sample5
+#> Feature1 0.2604576 0.1690360 1.0320920 1.27054736 0.78125372
+#> Feature2 3.5840574 0.5195996 0.2093035 0.01030329 0.40737647
+#> Feature3 2.4036786 0.5116417 2.7342324 0.77338070 1.83508608
+#> Feature4 2.7776564 0.5551269 1.0838316 1.25154840 0.38639540
+#> Feature5 2.7821946 0.6652486 1.1292559 1.53459183 0.08226841
 ```
 
 ### Run BINDER
 
 Given these two data structures, the BINDER model implementation can be
-invoked; let’s run the `BINDER::binder` function on the simulated
-`proxy_regulon` and `expression` data
+invoked.
+
+If you want to run `BINDER::binder` in parallel, you can alter the
+`mc.cores` global option; for example, to run `BINDER::binder` on 3
+cores, you can specify the following (see `?options` and `?parallel`):
+
+``` r
+options(mc.cores=3)
+```
+
+Let’s run the `BINDER::binder` function on the simulated `proxy_regulon`
+and `expression` data
     structures:
 
     results <- BINDER::binder(proxy_regulon=proxy_regulon, expression=expression)
@@ -144,7 +154,7 @@ to the putative regulator Feature1:
 ``` r
 results[["Feature1"]]$mean_theta[1:5]
 #>  Feature1  Feature2  Feature3  Feature4  Feature5 
-#> 0.2416932 0.2584999 0.2533846 0.2581473 0.2569062
+#> 0.2471730 0.2235725 0.2388696 0.2385041 0.2304853
 ```
 
 Posterior 0.025%-0.975% credible interval for `zeta` for the putative
@@ -153,7 +163,7 @@ regulator Feature2:
 ``` r
 results$Feature2$zeta_interval
 #>     0.025     0.975 
-#> -8.944301 -3.077080
+#> -9.638953 -3.631587
 ```
 
 Similarly, the S4 class stanfit objects (see `?rstan::sampling`)
@@ -164,6 +174,6 @@ for Feature1:
 
 ``` r
 rstan::summary(results[["Feature1"]]$model_object)$summary[1:3, "Rhat"]
-#>     zeta   tau[1]   tau[2] 
-#> 1.001776 1.000745 1.000233
+#>      zeta    tau[1]    tau[2] 
+#> 1.0007600 0.9996117 1.0003351
 ```

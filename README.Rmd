@@ -77,7 +77,14 @@ expression[1:5, 1:5]
 
 ### Run BINDER
 
-Given these two data structures, the BINDER model implementation can be invoked; let's run the `BINDER::binder` function on the simulated `proxy_regulon` and `expression` data structures:
+Given these two data structures, the BINDER model implementation can be invoked.
+
+If you want to run `BINDER::binder` in parallel, you can alter the `mc.cores` global option; for example, to run `BINDER::binder` on 3 cores, you can specify the following (see `?options` and `?parallel`):
+```{r}
+options(mc.cores=3)
+```
+
+Let's run the `BINDER::binder` function on the simulated `proxy_regulon` and `expression` data structures:
 ```{r, include = FALSE}
 results <- BINDER::binder(proxy_regulon=proxy_regulon, expression=expression)
 ```
