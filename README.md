@@ -25,6 +25,9 @@ pair. The auxiliary data inform the prior distributions and the
 posterior distributions are updated by accounting for the primary
 coexpression data in a novel, apposite bivariate likelihood function.
 
+For more information, see corresponding
+[publication](https://doi.org/10.1186/s12859-019-3042-8).
+
 ## BINDER R package
 
 ### Install BINDER
@@ -101,11 +104,11 @@ proxy_regulon <- data.frame(
 proxy_regulon$PE <- ifelse(proxy_regulon$ortholog_module_status == 0, 0, proxy_regulon$PE)
 head(proxy_regulon)
 #>   regulator target_candidate ortholog_module_status ME PE
-#> 1  Feature1         Feature1                      0  1  0
-#> 2  Feature1         Feature2                      1  1  1
-#> 3  Feature1         Feature3                      1  1  1
+#> 1  Feature1         Feature1                      1  0  1
+#> 2  Feature1         Feature2                      0  0  0
+#> 3  Feature1         Feature3                      1  0  0
 #> 4  Feature1         Feature4                      0  0  0
-#> 5  Feature1         Feature5                      0  1  0
+#> 5  Feature1         Feature5                      1  1  1
 #> 6  Feature1         Feature6                      0  1  0
 ```
 
@@ -125,12 +128,12 @@ expression <- matrix(rgamma((N*M), 1, 1), nrow=N) # Simulate expression data.
 rownames(expression) <- paste0("Feature", 1:N) # Names of features of interest.
 colnames(expression) <- paste0("Sample", 1:M) # Names of samples/experimental conditions.
 expression[1:5, 1:5]
-#>            Sample1   Sample2   Sample3    Sample4    Sample5
-#> Feature1 0.2985589 0.4683038 1.2125910 0.20447312 0.37017539
-#> Feature2 0.2278294 0.1124240 0.4461277 0.24682153 0.08901655
-#> Feature3 2.4278190 0.6272579 0.5405478 2.47196959 0.63504147
-#> Feature4 1.1062624 0.3100832 0.6648737 0.06052497 0.28580735
-#> Feature5 0.6507402 0.1423443 0.9094857 0.44851433 1.75663189
+#>            Sample1    Sample2   Sample3   Sample4   Sample5
+#> Feature1 3.5349622 3.14105065 0.3371845 0.5599447 2.9905482
+#> Feature2 1.3354500 0.14327524 2.0137719 0.1678082 0.7546942
+#> Feature3 1.0236223 0.08811973 0.7159417 0.3331889 0.3986848
+#> Feature4 1.8661619 1.85259789 0.5513087 1.2355948 0.1033417
+#> Feature5 0.2733524 0.36622549 2.6259289 0.2850141 0.4128588
 ```
 
 ### Run BINDER
@@ -183,16 +186,16 @@ by:
 ``` r
 results[["Feature1"]][[1]][1:10, 1:3]
 #>       theta[Feature1] theta[Feature2] theta[Feature3]
-#>  [1,]       0.3590215       0.2173603       0.4595265
-#>  [2,]       0.3092595       0.2184844       0.3053142
-#>  [3,]       0.3811403       0.4171059       0.3186562
-#>  [4,]       0.6072865       0.4564324       0.4384101
-#>  [5,]       0.5659700       0.4628380       0.4865641
-#>  [6,]       0.5659389       0.5187316       0.4967011
-#>  [7,]       0.5379224       0.6207171       0.5423335
-#>  [8,]       0.5679212       0.5721556       0.4961128
-#>  [9,]       0.5262889       0.5239661       0.5797066
-#> [10,]       0.5369010       0.5814917       0.5845185
+#>  [1,]       0.1681374       0.3477076       0.6200443
+#>  [2,]       0.1893283       0.3218594       0.4150221
+#>  [3,]       0.2744142       0.4866501       0.3690196
+#>  [4,]       0.5386341       0.4681985       0.4341110
+#>  [5,]       0.5489026       0.4662690       0.4696044
+#>  [6,]       0.5723213       0.5326793       0.4855688
+#>  [7,]       0.5631092       0.6393360       0.5263637
+#>  [8,]       0.5980026       0.5883900       0.4762252
+#>  [9,]       0.5602296       0.5303741       0.5674310
+#> [10,]       0.5826446       0.6010076       0.5746433
 ```
 
 The 5th, 9th and 11th posterior draws for `theta` for {Feature2,
@@ -203,9 +206,9 @@ by:
 ``` r
 results$Feature2[[1]][c(5, 9, 11), c("theta[Feature11]", "logit(theta[Feature9])", "zeta", "tau_ME")]
 #>      theta[Feature11] logit(theta[Feature9])        zeta     tau_ME
-#> [1,]        0.4829353             0.03733617 -0.08612575 0.09369568
-#> [2,]        0.6120259             0.30166177  0.23387067 0.05668823
-#> [3,]        0.5959564             0.35355580  0.28216806 0.01364373
+#> [1,]        0.4965259              0.1295014 -0.08838271 0.15016206
+#> [2,]        0.5802706              0.2583725  0.25203249 0.03674674
+#> [3,]        0.5652968              0.2808059  0.28476981 0.01532989
 ```
 
 You can also access summaries (mean, standard deviation and 0%, 25%,
@@ -217,19 +220,19 @@ that returned by `BINDER::binder`):
 ``` r
 head(summary(results))
 #>   regulator target_candidate      mean   std.dev.        0%       25%
-#> 1  Feature1         Feature1 0.5517206 0.02377518 0.3092595 0.5386721
-#> 2  Feature1         Feature2 0.5557324 0.02730216 0.2173603 0.5421914
-#> 3  Feature1         Feature3 0.5704321 0.02479461 0.3053142 0.5571993
-#> 4  Feature1         Feature4 0.5798860 0.02460916 0.3272047 0.5665950
-#> 5  Feature1         Feature5 0.5493962 0.02507074 0.2869857 0.5358284
-#> 6  Feature1         Feature6 0.5980025 0.02627707 0.2737798 0.5847863
+#> 1  Feature1         Feature1 0.5928781 0.03178056 0.1681374 0.5788284
+#> 2  Feature1         Feature2 0.5778794 0.02750820 0.3218594 0.5625920
+#> 3  Feature1         Feature3 0.5670677 0.02586060 0.3690196 0.5512209
+#> 4  Feature1         Feature4 0.5815275 0.02680061 0.3458604 0.5660052
+#> 5  Feature1         Feature5 0.5841839 0.03266487 0.1612005 0.5695483
+#> 6  Feature1         Feature6 0.5655742 0.02804707 0.2737798 0.5503719
 #>         50%       75%      100%
-#> 1 0.5534270 0.5661216 0.6147910
-#> 2 0.5557368 0.5715291 0.6286938
-#> 3 0.5712254 0.5845883 0.6346843
-#> 4 0.5798895 0.5946995 0.6424778
-#> 5 0.5504214 0.5638226 0.6290217
-#> 6 0.6000122 0.6132843 0.6595397
+#> 1 0.5946083 0.6099758 0.6667352
+#> 2 0.5786746 0.5952952 0.6580838
+#> 3 0.5670795 0.5831421 0.6405395
+#> 4 0.5814419 0.5979161 0.6492646
+#> 5 0.5855834 0.6015050 0.6622406
+#> 6 0.5675410 0.5827345 0.6378946
 ```
 
 The default behaviour of `summary` is to provide posterior summaries for
@@ -242,13 +245,13 @@ argument:
 relevant_target_candidates <- list("Feature1"=c("Feature1", "Feature7"), "Feature2"=c("Feature11", "Feature15"))
 summary(results, target_candidates=relevant_target_candidates)
 #>   regulator target_candidate      mean   std.dev.        0%       25%
-#> 1  Feature1         Feature1 0.5517206 0.02377518 0.3092595 0.5386721
-#> 2  Feature1         Feature7 0.5541087 0.02233644 0.3595835 0.5402106
-#> 3  Feature2        Feature11 0.5892315 0.02900208 0.1328382 0.5753144
-#> 4  Feature2        Feature15 0.5715759 0.02823166 0.1463963 0.5582078
+#> 1  Feature1         Feature1 0.5928781 0.03178056 0.1681374 0.5788284
+#> 2  Feature1         Feature7 0.5624138 0.02499361 0.3595835 0.5462711
+#> 3  Feature2        Feature11 0.5610081 0.02414697 0.2610603 0.5469466
+#> 4  Feature2        Feature15 0.5703521 0.02483849 0.2536209 0.5560276
 #>         50%       75%      100%
-#> 1 0.5534270 0.5661216 0.6147910
-#> 2 0.5545264 0.5677760 0.6328728
-#> 3 0.5901010 0.6048001 0.6572572
-#> 4 0.5719999 0.5868540 0.6419489
+#> 1 0.5946083 0.6099758 0.6667352
+#> 2 0.5628532 0.5776084 0.6499368
+#> 3 0.5611947 0.5755981 0.6524184
+#> 4 0.5704219 0.5845328 0.6950577
 ```

@@ -23,6 +23,8 @@ BINDER (BayesIan gene regulatory Networks inferreD via gene coExpression and com
 
 BINDER infers gene regulatory networks by constructing two strata: a primary stratum and an auxiliary stratum. The primary stratum is composed of coexpression data from a primary organism of interest and is supplemented by auxiliary data in the form of motif predictions and known orthologous regulator-target interactions from a proxy organism. BINDER implements a Bayesian hierarchical model that appositely models the type and structure of both this primary and auxiliary data to infer the probability of a regulatory interaction between a regulator-target pair. The auxiliary data inform the prior distributions and the posterior distributions are updated by accounting for the primary coexpression data in a novel, apposite bivariate likelihood function.
 
+For more information, see corresponding [publication](https://doi.org/10.1186/s12859-019-3042-8).
+
 ## BINDER R package
 
 ### Install BINDER

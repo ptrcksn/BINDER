@@ -1,0 +1,17 @@
+citHeader("To cite BINDER in publications, please use:")
+
+citEntry(entry="article",
+         author=c(person(given="Patrick", family="Staunton", middle="M."),
+                  person(given="Aleksandra", family="Miranda-CasoLuengo", middle="A."),
+                  person(given="Brendan", family="Loftus", middle="J."),
+                  person(given="Isobel", family="Gormley", middle="Claire")),
+         title="BINDER: computationally inferring a gene regulatory network for Mycobacterium abscessus",
+         journal="BMC Bioinformatics",
+         number="1",
+         pages="466",
+         volume="20",
+         year="2019",
+         doi="10.1186/s12859-019-3042-8",
+         url="https://doi.org/10.1186/s12859-019-3042-8",
+         textVersion="Staunton PM, Miranda-CasoLuengo AA, Loftus BJ, Gormley IC. BINDER: computationally inferring a gene regulatory network for Mycobacterium abscessus. BMC Bioinformatics. 2019. https://doi.org/10.1186/s12859-019-3042-8."
+)
