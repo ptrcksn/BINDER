@@ -1,10 +1,10 @@
 citHeader("To cite BINDER in publications, please use:")
 
 citEntry(entry="article",
-         author=c(person(given="Patrick", family="Staunton", middle="M."),
-                  person(given="Aleksandra", family="Miranda-CasoLuengo", middle="A."),
-                  person(given="Brendan", family="Loftus", middle="J."),
-                  person(given="Isobel", family="Gormley", middle="Claire")),
+         author=c(person("Patrick M. Staunton"),
+                  person("Aleksandra A. Miranda-CasoLuengo"),
+                  person("Brendan J. Loftus"),
+                  person("Isobel Claire Gormley")),
          title="BINDER: computationally inferring a gene regulatory network for Mycobacterium abscessus",
          journal="BMC Bioinformatics",
          number="1",

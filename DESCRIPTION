@@ -1,7 +1,7 @@
 Package: BINDER
 Type: Package
 Title: BayesIan gene regulatory Networks inferreD via gene coExpression and compaRative genomics
-Version: 1.0
+Version: 1.0.1
 Date: 2019-05-02
 Authors@R: as.person(c(
     "Patrick Staunton <patrick.staunton@ucdconnect.ie> [aut, cre]", 
