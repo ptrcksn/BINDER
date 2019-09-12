@@ -103,7 +103,7 @@ results <- BINDER::binder(proxy_regulon=proxy_regulon, expression=expression)
 The binder function argument `is.coexpression` defaults to `FALSE`;
 this means that BINDER treats the expression matrix supplied to the function as an `N*M` matrix where each row corresponds to a feature of interest and each column corresponds to a sample/experimental condition.
 
-(If a coexpression matrix is supplied to the BINDER function, the `is.coexpression` function argument should be set to `TRUE`. A coexpression matrix can be computed from an expression matrix using the `BINDER::compute_coexpression` function (see `?BINDER::compute_coexpression`).)
+(If a coexpression matrix is supplied to the BINDER function, the `is.coexpression` function argument should be set to `TRUE`. If desired, a coexpression matrix can be computed from an expression matrix using the `BINDER::compute_coexpression` function (see `?BINDER::compute_coexpression`).)
 
 ### Access BINDER results
 

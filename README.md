@@ -104,12 +104,12 @@ proxy_regulon <- data.frame(
 proxy_regulon$PE <- ifelse(proxy_regulon$ortholog_module_status == 0, 0, proxy_regulon$PE)
 head(proxy_regulon)
 #>   regulator target_candidate ortholog_module_status ME PE
-#> 1  Feature1         Feature1                      1  0  1
+#> 1  Feature1         Feature1                      0  1  0
 #> 2  Feature1         Feature2                      0  0  0
 #> 3  Feature1         Feature3                      1  0  0
-#> 4  Feature1         Feature4                      0  0  0
-#> 5  Feature1         Feature5                      1  1  1
-#> 6  Feature1         Feature6                      0  1  0
+#> 4  Feature1         Feature4                      1  0  1
+#> 5  Feature1         Feature5                      0  1  0
+#> 6  Feature1         Feature6                      0  0  0
 ```
 
 `expression` comprises an `N*M` matrix where each row corresponds to a
@@ -128,12 +128,12 @@ expression <- matrix(rgamma((N*M), 1, 1), nrow=N) # Simulate expression data.
 rownames(expression) <- paste0("Feature", 1:N) # Names of features of interest.
 colnames(expression) <- paste0("Sample", 1:M) # Names of samples/experimental conditions.
 expression[1:5, 1:5]
-#>            Sample1    Sample2   Sample3   Sample4   Sample5
-#> Feature1 3.5349622 3.14105065 0.3371845 0.5599447 2.9905482
-#> Feature2 1.3354500 0.14327524 2.0137719 0.1678082 0.7546942
-#> Feature3 1.0236223 0.08811973 0.7159417 0.3331889 0.3986848
-#> Feature4 1.8661619 1.85259789 0.5513087 1.2355948 0.1033417
-#> Feature5 0.2733524 0.36622549 2.6259289 0.2850141 0.4128588
+#>            Sample1    Sample2   Sample3   Sample4    Sample5
+#> Feature1 2.3489117 0.35507667 0.1508703 0.1016637 1.62519006
+#> Feature2 0.1918560 1.25832293 0.3032065 0.5291326 2.87581919
+#> Feature3 0.1183431 0.85321436 0.5866373 2.1859207 0.05352903
+#> Feature4 1.0078704 0.06905414 0.1479612 1.0205423 0.13920528
+#> Feature5 0.2869065 0.05668388 1.2943560 0.1759438 0.53792276
 ```
 
 ### Run BINDER
@@ -163,9 +163,9 @@ as an `N*M` matrix where each row corresponds to a feature of interest
 and each column corresponds to a sample/experimental condition.
 
 (If a coexpression matrix is supplied to the BINDER function, the
-`is.coexpression` function argument should be set to `TRUE`. A
-coexpression matrix can be computed from an expression matrix using the
-`BINDER::compute_coexpression` function (see
+`is.coexpression` function argument should be set to `TRUE`. If desired,
+a coexpression matrix can be computed from an expression matrix using
+the `BINDER::compute_coexpression` function (see
 `?BINDER::compute_coexpression`).)
 
 ### Access BINDER results
@@ -186,16 +186,16 @@ by:
 ``` r
 results[["Feature1"]][[1]][1:10, 1:3]
 #>       theta[Feature1] theta[Feature2] theta[Feature3]
-#>  [1,]       0.1681374       0.3477076       0.6200443
-#>  [2,]       0.1893283       0.3218594       0.4150221
-#>  [3,]       0.2744142       0.4866501       0.3690196
-#>  [4,]       0.5386341       0.4681985       0.4341110
-#>  [5,]       0.5489026       0.4662690       0.4696044
-#>  [6,]       0.5723213       0.5326793       0.4855688
-#>  [7,]       0.5631092       0.6393360       0.5263637
-#>  [8,]       0.5980026       0.5883900       0.4762252
-#>  [9,]       0.5602296       0.5303741       0.5674310
-#> [10,]       0.5826446       0.6010076       0.5746433
+#>  [1,]       0.3444320       0.3474237      0.73338267
+#>  [2,]       0.2932088       0.2418452      0.38029164
+#>  [3,]       0.2947132       0.3212269      0.21580408
+#>  [4,]       0.5383204       0.2216253      0.20809058
+#>  [5,]       0.4237041       0.1628518      0.18740706
+#>  [6,]       0.3749246       0.1871047      0.14907236
+#>  [7,]       0.2768919       0.3940304      0.16958468
+#>  [8,]       0.3602780       0.2560915      0.08207835
+#>  [9,]       0.2170996       0.1190923      0.22465461
+#> [10,]       0.2528819       0.2751432      0.24524074
 ```
 
 The 5th, 9th and 11th posterior draws for `theta` for {Feature2,
@@ -205,10 +205,10 @@ by:
 
 ``` r
 results$Feature2[[1]][c(5, 9, 11), c("theta[Feature11]", "logit(theta[Feature9])", "zeta", "tau_ME")]
-#>      theta[Feature11] logit(theta[Feature9])        zeta     tau_ME
-#> [1,]        0.4965259              0.1295014 -0.08838271 0.15016206
-#> [2,]        0.5802706              0.2583725  0.25203249 0.03674674
-#> [3,]        0.5652968              0.2808059  0.28476981 0.01532989
+#>      theta[Feature11] logit(theta[Feature9])      zeta     tau_ME
+#> [1,]        0.2576879             -0.7543109 -1.071112 0.08909659
+#> [2,]        0.3375324             -1.2019174 -1.187885 0.10538952
+#> [3,]        0.2748118             -1.1587853 -1.267864 0.14843953
 ```
 
 You can also access summaries (mean, standard deviation and 0%, 25%,
@@ -219,20 +219,20 @@ that returned by `BINDER::binder`):
 
 ``` r
 head(summary(results))
-#>   regulator target_candidate      mean   std.dev.        0%       25%
-#> 1  Feature1         Feature1 0.5928781 0.03178056 0.1681374 0.5788284
-#> 2  Feature1         Feature2 0.5778794 0.02750820 0.3218594 0.5625920
-#> 3  Feature1         Feature3 0.5670677 0.02586060 0.3690196 0.5512209
-#> 4  Feature1         Feature4 0.5815275 0.02680061 0.3458604 0.5660052
-#> 5  Feature1         Feature5 0.5841839 0.03266487 0.1612005 0.5695483
-#> 6  Feature1         Feature6 0.5655742 0.02804707 0.2737798 0.5503719
+#>   regulator target_candidate      mean   std.dev.         0%       25%
+#> 1  Feature1         Feature1 0.2749750 0.06839296 0.06246811 0.2270924
+#> 2  Feature1         Feature2 0.2162535 0.06132870 0.06998652 0.1738338
+#> 3  Feature1         Feature3 0.2257045 0.06387967 0.08207835 0.1801842
+#> 4  Feature1         Feature4 0.2377410 0.06420592 0.09289226 0.1929313
+#> 5  Feature1         Feature5 0.1732752 0.05070386 0.05180642 0.1362150
+#> 6  Feature1         Feature6 0.2344679 0.06260424 0.08615899 0.1885697
 #>         50%       75%      100%
-#> 1 0.5946083 0.6099758 0.6667352
-#> 2 0.5786746 0.5952952 0.6580838
-#> 3 0.5670795 0.5831421 0.6405395
-#> 4 0.5814419 0.5979161 0.6492646
-#> 5 0.5855834 0.6015050 0.6622406
-#> 6 0.5675410 0.5827345 0.6378946
+#> 1 0.2704985 0.3169951 0.5383204
+#> 2 0.2091073 0.2544163 0.4599965
+#> 3 0.2180709 0.2620565 0.7333827
+#> 4 0.2302281 0.2777345 0.4568322
+#> 5 0.1679466 0.2038884 0.4005127
+#> 6 0.2308776 0.2734669 0.4674663
 ```
 
 The default behaviour of `summary` is to provide posterior summaries for
@@ -244,14 +244,14 @@ argument:
 ``` r
 relevant_target_candidates <- list("Feature1"=c("Feature1", "Feature7"), "Feature2"=c("Feature11", "Feature15"))
 summary(results, target_candidates=relevant_target_candidates)
-#>   regulator target_candidate      mean   std.dev.        0%       25%
-#> 1  Feature1         Feature1 0.5928781 0.03178056 0.1681374 0.5788284
-#> 2  Feature1         Feature7 0.5624138 0.02499361 0.3595835 0.5462711
-#> 3  Feature2        Feature11 0.5610081 0.02414697 0.2610603 0.5469466
-#> 4  Feature2        Feature15 0.5703521 0.02483849 0.2536209 0.5560276
+#>   regulator target_candidate      mean   std.dev.         0%       25%
+#> 1  Feature1         Feature1 0.2749750 0.06839296 0.06246811 0.2270924
+#> 2  Feature1         Feature7 0.1850818 0.05277211 0.07245370 0.1474260
+#> 3  Feature2        Feature11 0.2422060 0.06548180 0.08439559 0.1964373
+#> 4  Feature2        Feature15 0.1923132 0.05621942 0.06748995 0.1541940
 #>         50%       75%      100%
-#> 1 0.5946083 0.6099758 0.6667352
-#> 2 0.5628532 0.5776084 0.6499368
-#> 3 0.5611947 0.5755981 0.6524184
-#> 4 0.5704219 0.5845328 0.6950577
+#> 1 0.2704985 0.3169951 0.5383204
+#> 2 0.1803393 0.2140034 0.4640942
+#> 3 0.2354611 0.2797723 0.5416652
+#> 4 0.1850068 0.2237455 0.5165300
 ```
